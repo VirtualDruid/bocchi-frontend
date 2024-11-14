@@ -4,7 +4,7 @@ import { VirtuosoGrid, Virtuoso, GridComponents } from "react-virtuoso";
 import * as _ from "lodash";
 import moment from "moment";
 
-import data from './gbc.json';
+import data from './bocchi.json';
 
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -15,12 +15,12 @@ import { Chart, GoogleChartWrapper, ReactGoogleChartEvent } from "react-google-c
 
 import "./style.css";
 const episodes = [
-  "*", "GBC_01", "GBC_02", "GBC_03", "GBC_04", "GBC_05", "GBC_06", "GBC_07", "GBC_08", "GBC_09", "GBC_10", "GBC_11", "GBC_12", "GBC_13"
+  "*", "bocchi_01", "bocchi_02", "bocchi_03", "bocchi_04", "bocchi_05", "bocchi_06", "bocchi_07", "bocchi_08", "bocchi_09", "bocchi_10", "bocchi_11", "bocchi_12"
 ]
 const HOST = 'https://anon-tokyo.com';
 const CDN = 'https://cdn.anon-tokyo.com';
 
-const SITE_THEME_COLOR = "#B61316"
+const SITE_THEME_COLOR = "#F5ABC6"
 
 //const API = 'https://api.anon-tokyo.com'
 export default function Home() {
