@@ -20,7 +20,7 @@ const episodes = [
 const HOST = 'https://anon-tokyo.com';
 const CDN = 'https://cdn.anon-tokyo.com';
 
-const SITE_THEME_COLOR = "#F5ABC6"
+const SITE_THEME_COLOR = "#F5ACC7"
 
 //const API = 'https://api.anon-tokyo.com'
 export default function Home() {
