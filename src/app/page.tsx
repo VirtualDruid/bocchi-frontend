@@ -21,6 +21,7 @@ const HOST = 'https://anon-tokyo.com';
 const CDN = 'https://cdn.anon-tokyo.com';
 
 const SITE_THEME_COLOR = "#F5ACC7"
+const THUMB_PATH = "bocchi"
 
 //const API = 'https://api.anon-tokyo.com'
 export default function Home() {
@@ -483,7 +484,7 @@ const ItemWrapper = ({
           segmentIdRef.current = result.segment_id;
         }}
         loading="lazy"
-        src={`${CDN}/thumb/gbc/${result.episode}__${result.frame_start}.jpg`} />
+        src={`${CDN}/thumb/${THUMB_PATH}/${result.episode}__${result.frame_start}.jpg`} />
     </Tooltip>
 
   </div>
