@@ -5,7 +5,7 @@ import * as _ from "lodash";
 import moment from "moment";
 
 import data from './bocchi.json';
-
+import { episodes, HOST, CDN, SITE_THEME_COLOR, THUMB_PATH, HINT_LINK } from "./config";
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -15,17 +15,17 @@ import { Chart, GoogleChartWrapper, ReactGoogleChartEvent } from "react-google-c
 
 import "./style.css";
 import { ArrowDownward, FastForward, FastRewind } from "@mui/icons-material";
-
-const episodes = [
-  "*", "bocchi_01", "bocchi_02", "bocchi_03", "bocchi_04", "bocchi_05", "bocchi_06", "bocchi_07", "bocchi_08", "bocchi_09", "bocchi_10", "bocchi_11", "bocchi_12"
+/* const episodes = [
+  "*", "1-3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"
 ]
 const HOST = 'https://anon-tokyo.com';
 const CDN = 'https://cdn.anon-tokyo.com';
 
-const SITE_THEME_COLOR = "#F5ACC7"
-const THUMB_PATH = "bocchi"
+const SITE_THEME_COLOR = '#3381AF';
+const THUMB_PATH = "thumb" */
 
 //const API = 'https://api.anon-tokyo.com'
+
 export default function Home() {
 
   //const [segment, setSegment] = useState({ episode: "", frame_current: -1, frame_start: -1, frame_end: -1, segment_id: -1, is_visible: false});
@@ -96,12 +96,17 @@ export default function Home() {
           segmentIdRef={segmentIdRef}
           setFrameRangeStartEnd={setFrameRangeStartEnd}
           setCurrentFrame={setCurrentFrame} />
-        <div style={{ position: "fixed", top: "0px" }}>
-          <input style={{ position: "relative", padding: "0.5rem", opacity: "0.7", top: "20px", left: "20px" }} placeholder="輸入台詞" value={keyword} onChange={handleKeywordOnChange}></input>
-          <select style={{ position: "relative", padding: "0.5rem", opacity: "0.7", top: "20px", left: "20px" }} onChange={handleEpisodeOnChange}>
+        <div style={{ position: "fixed", top: "20px", left: "20px" }}>
+          <input style={{ position: "relative", padding: "0.5rem", opacity: "0.7" }} placeholder="輸入台詞" value={keyword} onChange={handleKeywordOnChange}></input>
+          <select style={{ position: "relative", padding: "0.5rem", opacity: "0.7" }} onChange={handleEpisodeOnChange}>
             {episodes.map((e) => { return <option value={e} key={e}>{e}</option> })}
           </select>
         </div>
+        <Chip
+          style={{ position: "absolute", top: "20px", right: "20px" }}
+          sx={{backgroundColor: "white", opacity: "0.7"}}
+          label={<a href={HINT_LINK} target="_blank">{"說明"}</a>} />
+
         {<FullImageContainer
           timelineEpisodeState={timelineEpisodeState}
           setTimelineEpisodeState={setTimelineEpisodeState}
@@ -184,9 +189,8 @@ function FullImageContainer({
     setCurrentFrame: React.Dispatch<number>
   }) {
 
-  //console.log("FullImageContainer :", segmentId);
   const theme = useTheme();
-  const large = useMediaQuery(theme.breakpoints.up("sm"));
+  const large: boolean = useMediaQuery(theme.breakpoints.up("sm"));
 
   const debounceChangeCurrentFrame = useCallback(
     _.debounce((frame: number, episode: string) => {
@@ -253,7 +257,7 @@ function FullImageContainer({
 
   //const segment = data.result[segmentId];
 
-  const delta =  Math.abs(gifRangeStartEnd[0] - gifRangeStartEnd[1]);
+  const delta = Math.abs(gifRangeStartEnd[0] - gifRangeStartEnd[1]);
 
   const isGifValidRange: boolean = delta <= 240
     && gifRangeStartEnd[0] >= 0
@@ -367,10 +371,10 @@ function FullImageContainer({
                 backgroundColor: "white",
                 color: "black"
               }}
-              startIcon={isReverse ? <FastRewind/> : <FastForward/>}
+              startIcon={isReverse ? <FastRewind /> : <FastForward />}
               onClick={handleReverseOnClick}
               className={isGifMode && isVisible ? "generate-button-visible" : "generate-button-hidden"}>
-              {`倒轉 ${gifRangeStartEnd[0]} ~ ${gifRangeStartEnd[1]} (${(delta / 24).toFixed(3)}秒)`}
+              {`倒轉 ${gifRangeStartEnd[0]} ~ ${gifRangeStartEnd[1]} (${(delta / 24).toFixed(3)}秒 / ${delta}幀)`}
             </Button>
 
           </div>
@@ -383,17 +387,17 @@ function FullImageContainer({
               setCurrentFrame(0);
             }} />
         </div>
-        
+
         {
-        (<Tooltip title={`${frameRangeStartEnd[0]}~${frameRangeStartEnd[1]} ${currentFrame}`}>
-          <Chip
-            style={{ position: large ? "absolute" : "relative", left: large ? "0dvw" : "45dvw"}}
-            color="primary"
-            sx={{ "& .MuiChip-colorPrimary": { color: SITE_THEME_COLOR } }}
-            label={`${currentFrame - frameRangeStartEnd[0]}/${frameRangeStartEnd[1] - frameRangeStartEnd[0]}`} />
-        </Tooltip>)
+          (<Tooltip title={`${frameRangeStartEnd[0]}~${frameRangeStartEnd[1]} ${currentFrame}`}>
+            <Chip
+              style={{ position: large ? "absolute" : "relative", left: large ? "0dvw" : "45dvw" }}
+              sx={{ backgroundColor: SITE_THEME_COLOR, color: "white" }}
+              label={`${currentFrame - frameRangeStartEnd[0]}/${frameRangeStartEnd[1] - frameRangeStartEnd[0]}`} />
+          </Tooltip>)
         }
         <Slider
+          id="frame-slider"
           sx={{
             "& .MuiSlider-thumb": {
               color: SITE_THEME_COLOR
@@ -418,11 +422,15 @@ function FullImageContainer({
               color: "white",
               height: 2,
               width: 2
+            },
+            "& .MuiSlider-valueLabel": {
+              backgroundColor: SITE_THEME_COLOR,
+              color: "white",
             }
           }}
           onChange={handleSliderOnChange}
           valueLabelDisplay="on"
-          style={{ marginTop: large ? "0dvh" : "5dvh", marginLeft: "10dvw", marginRight: "10dvw", width: "80dvw", height: "0px" }}
+          style={{ marginTop: "7dvh", marginLeft: "10dvw", marginRight: "10dvw", width: "80dvw", height: "0px" }}
           value={isGifMode ? gifRangeStartEnd : currentFrame}
           marks
           step={1}
@@ -572,6 +580,9 @@ function Timeline({
     callback: selectHandler
   }
 
+  const theme = useTheme();
+  const large: boolean = useMediaQuery(theme.breakpoints.up("sm"));
+
   return (
     <div style={{ background: "white" }}>
 
@@ -592,7 +603,7 @@ function Timeline({
         height="100px"
         chartEvents={[selectEvent]}
       />
-      <div style={{ position: "fixed", bottom: "5dvh", width: "100%", display: "flex", justifyContent: "center", alignContent: "center" }}>
+      <div style={{ position: "fixed", bottom: large ? "2dvh" : "5dvh", width: "100%", display: "flex", justifyContent: "center", alignContent: "center" }}>
         <IconButton
           style={{ background: SITE_THEME_COLOR, color: "white" }}
           onClick={() => {

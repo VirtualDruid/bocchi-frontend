@@ -5,8 +5,9 @@
 
 import { Analytics } from '@vercel/analytics/react';
 import ReactGA from 'react-ga4';
+import { GA4_TOKEN } from './config';
 //const inter = Inter({ subsets: ["latin"] });
-ReactGA.initialize("G-MB90LM6CT6");
+ReactGA.initialize(GA4_TOKEN);
 
 export default function RootLayout({
   children,
@@ -16,6 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en" style={{backgroundColor:"#F5ACC7", height:"100%"}}>
       <title>Bocchi</title>
+      <head>
+
+      </head>
       <body>{children}
         <Analytics/>
       </body>
